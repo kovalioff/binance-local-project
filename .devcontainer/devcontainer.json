@@ -1,0 +1,19 @@
+{
+  "name": "Crypto Pipeline & Analytics",
+  "forwardPorts": [8080, 8085, 8501],
+  "portsAttributes": {
+    "8080": {
+      "label": "Kestra Orchestrator",
+      "onAutoForward": "notify"
+    },
+    "8085": {
+      "label": "Kafka UI",
+      "onAutoForward": "notify"
+    },
+    "8501": {
+      "label": "Streamlit Dashboard",
+      "onAutoForward": "openPreview"
+    }
+  },
+  "postCreateCommand": "docker compose up -d --build"
+}
