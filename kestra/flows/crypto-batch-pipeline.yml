@@ -1,0 +1,33 @@
+id: crypto-batch-pipeline
+namespace: crypto.local
+description: "Batch: Binance Vision -> Spark Parquet -> dbt DuckDB"
+
+triggers:
+  - id: daily
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "0 6 * * *"
+
+tasks:
+  - id: download
+    type: io.kestra.plugin.scripts.shell.Commands
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    description: "Скачиваем zip с Binance Vision"
+    commands:
+      - cd /app && /opt/venv/bin/python src/ingestion/download_binance.py
+
+  - id: spark
+    type: io.kestra.plugin.scripts.shell.Commands
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    description: "Spark: raw zip -> parquet lake"
+    commands:
+      - cd /app && /opt/venv/bin/python src/batch/spark_klines.py
+
+  - id: dbt_build
+    type: io.kestra.plugin.scripts.shell.Commands
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    description: "dbt: строим staging + marts + тесты"
+    commands:
+      - cd /app && /opt/venv/bin/dbt deps --project-dir dbt_crypto --profiles-dir dbt_crypto/profiles && /opt/venv/bin/dbt build --project-dir dbt_crypto --profiles-dir dbt_crypto/profiles

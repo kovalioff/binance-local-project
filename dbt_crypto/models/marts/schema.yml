@@ -1,0 +1,54 @@
+version: 2
+
+models:
+  - name: dim_crypto_symbols
+    description: "Измерение: справочник монет (только текст и описания)"
+    columns:
+      - name: symbol
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_dates
+    description: "Измерение: календарь (только даты и дни недели)"
+    columns:
+      - name: date_day
+        tests:
+          - unique
+          - not_null
+
+  - name: fct_crypto_daily
+    description: "Таблица Фактов: суточные торги криптовалют"
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - symbol
+              - trade_date
+    columns:
+      - name: crypto_daily_id
+        tests:
+          - unique
+          - not_null
+      - name: symbol
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_crypto_symbols')
+                field: symbol
+      - name: trade_date
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_dates')
+                field: date_day
+      - name: close_price
+        tests:
+          - not_null
+          - is_positive
+      - name: volume_usdt
+        tests:
+          - not_null
+          - is_positive

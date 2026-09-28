@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: data_lake
+    description: "Parquet-файлы часовых свечей, подготовленные Спарком"
+    tables:
+      - name: raw_klines
+        description: "Часовые свечи BTC, ETH, SOL (symbol берется из имени папки)"

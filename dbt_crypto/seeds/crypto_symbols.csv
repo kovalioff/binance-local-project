@@ -1,0 +1,4 @@
+symbol,base_asset,quote_asset,asset_name,category
+BTCUSDT,BTC,USDT,Bitcoin,Store of Value
+ETHUSDT,ETH,USDT,Ethereum,Smart Contracts
+SOLUSDT,SOL,USDT,Solana,High Throughput L1

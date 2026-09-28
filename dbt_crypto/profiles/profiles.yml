@@ -1,0 +1,7 @@
+dbt_crypto:
+  outputs:
+    dev:
+      type: duckdb
+      path: "{{ env_var('DBT_DUCKDB_PATH', 'dbt_crypto/dev.duckdb') }}"
+      threads: 1
+  target: dev
