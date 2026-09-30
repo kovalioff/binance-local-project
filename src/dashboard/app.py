@@ -37,7 +37,8 @@ def get_kafka_price(symbol):
         consumer = KafkaConsumer(
             "crypto_topic",
             bootstrap_servers="localhost:9092",
-            consumer_timeout_ms=500,
+            auto_offset_reset="earliest",
+            consumer_timeout_ms=1000,
             value_deserializer=lambda x: json.loads(x.decode("utf-8")),
         )
         price = None
