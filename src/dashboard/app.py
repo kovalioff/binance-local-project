@@ -12,8 +12,7 @@ st.title("Crypto Analytics Terminal")
 
 db_path = "dbt_crypto/dev.duckdb"
 if not os.path.exists(db_path):
-    st.warning("⚠️ База данных DWH еще не собрана.")
-    st.info("👉 Откройте оркестратор Kestra и запустите поток `crypto-batch-pipeline`, чтобы скачать данные и собрать витрины!")
+    st.info("База данных еще не собрана.")
     st.stop()
 
 con = duckdb.connect(db_path, read_only=True)
@@ -21,12 +20,11 @@ try:
     tables = [t[0] for t in con.execute("SHOW TABLES").fetchall()]
     if "fct_crypto_daily" not in tables or "fct_crypto_market_correlation" not in tables:
         con.close()
-        st.warning("⚠️ Таблицы DWH еще не построены.")
-        st.info("👉 Запустите `crypto-batch-pipeline` в Kestra для сборки моделей dbt!")
+        st.info("База данных еще не собрана.")
         st.stop()
 except Exception:
     con.close()
-    st.warning("⚠️ Ошибка чтения структуры DWH.")
+    st.info("База данных еще не собрана.")
     st.stop()
 query = """
     SELECT 
